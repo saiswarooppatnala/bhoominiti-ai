@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 
 bhoominiti.db
+.DS_Store
