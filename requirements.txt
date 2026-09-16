@@ -1,0 +1,9 @@
+streamlit>=1.35
+pandas>=2.0
+geopandas>=0.14
+folium>=0.16
+streamlit-folium>=0.21
+plotly>=5.20
+scikit-learn>=1.4
+anthropic>=0.34
+statsmodels>=0.14
