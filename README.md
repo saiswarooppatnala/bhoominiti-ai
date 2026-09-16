@@ -1,136 +1,148 @@
-# BhoomiNiti AI — National Land Governance Intelligence Platform
+<div align="center">
 
-Prototype for SIH26019 (Ministry of Rural Development, Dept. of Land Resources):
-*National Digital Platform for Research, Policy Innovation, and Evidence-Based
-Land Governance.*
+# 🌏 BhoomiNiti AI
 
-## What's implemented
+### National Digital Platform for Research, Policy Innovation & Evidence-Based Land Governance
 
-| Problem statement bullet | Status |
+**Prototype for SIH26019 · Ministry of Rural Development · Department of Land Resources**
+
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![SQLite](https://img.shields.io/badge/Database-SQLite-07405E?logo=sqlite&logoColor=white)](https://www.sqlite.org/)
+[![Claude](https://img.shields.io/badge/AI-Claude-D4A574?logo=anthropic&logoColor=white)](https://www.anthropic.com/)
+[![Status](https://img.shields.io/badge/Status-Prototype-yellow)]()
+[![License](https://img.shields.io/badge/License-None-lightgrey)]()
+
+</div>
+
+---
+
+## Overview
+
+Land governance in India generates enormous volumes of data — cadastral records, GIS layers, satellite imagery, policy documents — but there's no unified platform to turn that data into research, evidence, and coordinated policy action.
+
+**BhoomiNiti AI** is a working prototype of that platform: a single application that brings together GIS-based spatial intelligence, an AI-powered research repository, policy scenario simulation, and an innovation portal for hackathons and grants, all backed by a real (if lightweight) database with role-based access.
+
+## Table of Contents
+
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Quick Start](#quick-start)
+- [Logging In](#logging-in)
+- [Enabling Claude AI Synthesis](#enabling-claude-ai-synthesis)
+- [Project Structure](#project-structure)
+- [Roadmap](#roadmap)
+- [Data Notice](#data-notice)
+
+## Features
+
+| Module | What it does |
 |---|---|
-| Centralized repository for research, policy papers, datasets | ✅ Research Hub (SQLite-backed) |
-| AI-powered search / recommendation engine | ✅ TF-IDF retrieval + optional Claude synthesis |
-| Interactive GIS visualization | ✅ GIS Intelligence (choropleth + drill-down) |
-| Analytics & decision-support tools | ✅ Analytics page (correlations, scatter, drivers) |
-| Policy simulation modules | ✅ Policy Lab (weight-adjustable scenario risk) |
-| Secure role-based access | ✅ Login/signup, Public / Researcher / Official roles |
-| Innovation portal (hackathons, grants, pilots) | ✅ Innovation Portal (post, browse, submit, review) |
-| Dashboards | ✅ Dashboard + per-state profiles |
-| AI-assisted trend analysis / literature synthesis | ✅ AI Intelligence page (Claude-powered, optional) |
-| APIs for external integration | ⚠️ Not built — see "What's not implemented" |
-| Satellite imagery / remote sensing integration | ⚠️ Not built — see "What's not implemented" |
-| Collaborative workspaces | ⚠️ Not built in this pass |
+| 📊 **Dashboard** | National governance metrics, risk distribution, state-by-state ranking |
+| 🗺️ **GIS Intelligence** | Interactive choropleth map with drill-down, multiple base layers, per-state risk profiles |
+| 📚 **Research Hub** | Centralized, searchable repository of land governance research and policy papers |
+| 🤖 **AI Intelligence** | TF-IDF evidence retrieval, ranked results, and optional Claude-powered synthesis and follow-up Q&A |
+| 📈 **Analytics** | Correlation matrices, scatter analysis, and dominant risk-driver breakdowns |
+| ⚖️ **Policy Lab** | Adjustable-weight scenario simulation for testing policy trade-offs |
+| 🚀 **Innovation Portal** | Hackathons, grants, and pilot projects — post, browse, submit, and review proposals |
+| 📄 **Reports** | One-click, downloadable per-state intelligence briefs |
+| 🔐 **Role-Based Access** | Public guest / Researcher / Official tiers with gated features |
 
-## What's not implemented (and why)
+## Tech Stack
 
-- **Real satellite/remote-sensing imagery** — needs a licensed data feed
-  (Bhuvan/ISRO, Sentinel Hub, etc.); out of scope for a local prototype.
-- **External REST APIs** — the app currently *is* the interface. Exposing
-  `db.py`'s functions behind FastAPI endpoints is the natural next step if
-  you want other systems to integrate; ask and I'll build that layer.
-- **Collaborative workspaces** — you deprioritized this in favor of AI,
-  login, and the Innovation Portal. The DB schema and role system are
-  already structured so this can be added later without a rewrite.
-- **India state boundaries are placeholder rectangles**, not survey-accurate
-  polygons — see "Important: swap in a real GeoJSON" below.
+<div align="center">
 
-## Setup
+| Layer | Technology |
+|---|---|
+| Frontend / App | Streamlit |
+| Database | SQLite |
+| Mapping | GeoPandas, Folium |
+| Charts | Plotly |
+| Search & Retrieval | scikit-learn (TF-IDF, cosine similarity) |
+| Optional LLM Layer | Anthropic Claude API |
+| Auth | PBKDF2-hashed credentials, session-based roles |
+
+</div>
+
+## Quick Start
 
 ```bash
-cd bhoominiti_platform
-python -m venv venv
-source venv/bin/activate        
+git clone https://github.com/saiswarooppatnala/bhoominiti-ai.git
+cd bhoominiti-ai
+
+python3 -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
+
 pip install -r requirements.txt
 streamlit run app.py
 ```
 
-`geopandas` can be the trickiest install on Windows (it needs GDAL/Fiona/
-pyproj). If `pip install geopandas` fails, the easiest fix is:
-```bash
-conda install -c conda-forge geopandas
-```
-then `pip install` the rest of `requirements.txt` inside that same
-environment.
+The app opens at `http://localhost:8501`. A SQLite database (`bhoominiti.db`) is created and seeded automatically on first run — no manual setup required.
 
-The app creates `bhoominiti.db` (SQLite) on first run and seeds it from the
-CSVs in `data/`. Delete `bhoominiti.db` any time to reset to fresh demo data.
+> **Windows note:** `geopandas` can be the trickiest install (it needs GDAL/Fiona/pyproj). If `pip install geopandas` fails, use `conda install -c conda-forge geopandas` instead, then install the rest of `requirements.txt` in that same environment.
 
-## Logging in
+## Logging In
 
-Two demo accounts are seeded automatically:
+Two demo accounts are seeded automatically so you can explore every role immediately:
 
 | Role | Username | Password |
 |---|---|---|
-| Official | `official_demo` | `Demo@1234` |
-| Researcher | `researcher_demo` | `Demo@1234` |
+| 👤 Official | `official_demo` | `Demo@1234` |
+| 🔬 Researcher | `researcher_demo` | `Demo@1234` |
 
-You can also sign up your own account, or continue as a **Guest** for
-read-only browsing (Dashboard, GIS, Research Hub, AI Intelligence,
-Analytics, and viewing the Innovation Portal). Logging in unlocks the
-Policy Lab, contributing research records, and submitting/reviewing
-Innovation Portal proposals. **Officials** can additionally post new
-opportunities and change their status.
+You can also sign up your own account, or continue as a **Guest** for read-only access to the Dashboard, GIS Intelligence, Research Hub, AI Intelligence, Analytics, and the public Innovation Portal listing. Logging in unlocks the Policy Lab, contributing research records, and submitting or reviewing Innovation Portal proposals. Officials can additionally post new opportunities and manage their status.
 
-⚠️ This is a prototype auth system (PBKDF2-hashed passwords in SQLite,
-session held in Streamlit's session state). It's fine for a demo or an
-internal pilot but would need HTTPS, rate-limiting, and a proper session
-store before any real deployment.
+> This is a prototype auth system — solid for a demo or internal pilot, but it would need HTTPS, rate-limiting, and a production session store before any real deployment.
 
-## Enabling Claude-powered AI synthesis
+## Enabling Claude AI Synthesis
 
-The Research Hub search always works offline (TF-IDF + cosine similarity —
-no API key needed). For richer, natural-language synthesis and follow-up
-Q&A on the **AI Intelligence** page:
+Evidence retrieval always works fully offline (TF-IDF + cosine similarity, no API key required). To enable natural-language synthesis and follow-up Q&A on the **AI Intelligence** page:
 
-1. Get an API key from https://console.anthropic.com
-2. Paste it into the "🔑 AI Settings" box in the sidebar (kept only in that
-   browser session — nothing is written to disk).
-3. Run a search on the AI Intelligence page — the synthesis and the
-   follow-up question box will now use Claude, grounded strictly in the
-   retrieved evidence records (the prompt instructs it not to invent facts).
+1. Get an API key from [console.anthropic.com](https://console.anthropic.com)
+2. Paste it into the **AI Settings** panel in the sidebar (kept only in that browser session — never written to disk)
+3. Run a search — synthesis and follow-up answers will now be generated by Claude, grounded strictly in the retrieved evidence
 
-If no key is set, or the `anthropic` package isn't installed, everything
-falls back to the offline rule-based summary automatically — the app never
-breaks because of this.
+Without a key, everything falls back automatically to the offline rule-based summary.
 
-## Important: swap in a real India states GeoJSON
-
-`data/india_states.geojson` in this prototype is a **placeholder** —
-simplified rectangular boxes around each state's approximate centroid, just
-so the choropleth map renders and the demo runs end-to-end without needing
-internet access to fetch a real boundary file. It is *not* survey-accurate
-and shouldn't be used beyond this demo.
-
-To get accurate boundaries:
-1. Search for an open India states GeoJSON (a commonly used one is the
-   `india_states.geojson` file circulated in several public GitHub repos
-   for Indian choropleth maps — search "India states GeoJSON st_nm" to find
-   a current, actively maintained source).
-2. Replace `data/india_states.geojson` with the downloaded file.
-3. Make sure it has a property holding the state name — if it isn't called
-   `st_nm`, update the field name check near the top of `load_states()` in
-   `app.py`.
-4. Delete `bhoominiti.db` if you also change `land_data.csv` state names,
-   so the seed data re-syncs.
-
-## Project structure
+## Project Structure
 
 ```
-bhoominiti_platform/
-├── app.py              # Main Streamlit app — all pages, UI, routing
-├── db.py                # SQLite schema, seeding, CRUD helpers
-├── auth.py               # Login/signup/role-gating logic
-├── ai_engine.py          # TF-IDF retrieval + optional Claude synthesis
+bhoominiti-ai/
+├── app.py                     # Streamlit app — pages, UI, routing
+├── db.py                      # SQLite schema, seeding, CRUD
+├── auth.py                    # Login, signup, role gating
+├── ai_engine.py                # TF-IDF retrieval + Claude synthesis
 ├── requirements.txt
 ├── data/
-│   ├── land_data.csv         # Synthetic state-level indicators (36 states/UTs)
-│   ├── research_data.csv     # Synthetic research corpus (36 records)
-│   └── india_states.geojson  # Placeholder boundaries — replace before real use
-└── bhoominiti.db        # Created automatically on first run
+│   ├── land_data.csv           # Synthetic state-level indicators (36 states/UTs)
+│   ├── research_data.csv       # Synthetic research corpus
+│   └── india_states.geojson    # Simplified state boundary shapes
+└── bhoominiti.db               # Created automatically on first run
 ```
 
-## Data notice
+## Roadmap
 
-All data (`land_data.csv`, `research_data.csv`) is **synthetic demo data**
-generated for this prototype. It is not sourced from any official
-government dataset and should not be presented as real statistics.
+Built in this prototype:
+
+- ✅ Centralized research repository with AI-powered search
+- ✅ Interactive GIS visualization with spatial risk layers
+- ✅ Policy simulation and decision-support analytics
+- ✅ Role-based access (Public / Researcher / Official)
+- ✅ Innovation portal for hackathons, grants, and pilot projects
+
+Not yet built, and why:
+
+- **Satellite / remote-sensing imagery** — needs a licensed data feed (Bhuvan/ISRO, Sentinel Hub), out of scope for a local prototype
+- **External REST APIs** — the app is currently the interface itself; exposing `db.py` behind FastAPI endpoints is a natural next step
+- **Collaborative workspaces** — deprioritized in favor of AI synthesis, auth, and the Innovation Portal; the schema already supports adding this later
+- **Survey-accurate state boundaries** — `india_states.geojson` uses simplified, hand-plotted outlines rather than official cadastral boundaries
+
+## Data Notice
+
+All data in this repository (`land_data.csv`, `research_data.csv`, `india_states.geojson`) is **synthetic demo data** created for this prototype. None of it is sourced from an official government dataset, and it should not be presented or cited as real statistics.
+
+---
+
+<div align="center">
+Built for Smart India Hackathon 2026 · SIH26019 · Dept. of Land Resources
+</div>
